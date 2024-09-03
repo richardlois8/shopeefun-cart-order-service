@@ -100,6 +100,7 @@ func (s *store) GetCartByUserID(bReq model.GetCartRequest) (*[]model.Cart, error
 			&cart.ID,
 			&cart.UserID,
 			&cart.ProductID,
+			&cart.ShopID,
 			&cart.Qty,
 			&cart.CreatedAt,
 			&cart.UpdatedAt,
@@ -184,12 +185,14 @@ func (s *store) AddCart(bReq model.Cart) (*uuid.UUID, error) {
 		INSERT INTO cart_items (
 			user_id,
 			product_id,
+			shop_id,
 			qty,
 			created_at
 		) VALUES (
 			$1,
 			$2,
 			$3,
+			$4,
 			NOW()
 		) RETURNING id
 	`
@@ -197,6 +200,7 @@ func (s *store) AddCart(bReq model.Cart) (*uuid.UUID, error) {
 		queryCreate,
 		bReq.UserID,
 		bReq.ProductID,
+		bReq.ShopID,
 		bReq.Qty,
 	).Scan(&id); err != nil {
 		tx.Rollback()

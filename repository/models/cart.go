@@ -10,6 +10,7 @@ type Cart struct {
 	ID        uuid.UUID  `json:"id"`
 	UserID    uuid.UUID  `json:"user_id"`
 	ProductID uuid.UUID  `json:"product_id"`
+	ShopID	  uuid.UUID  `json:"shop_id"`
 	Qty       int        `json:"qty"`
 	CreatedAt *time.Time `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`

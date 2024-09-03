@@ -4,6 +4,7 @@ CREATE TABLE cart_items(
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID NOT NULL,
     product_id UUID NOT NULL,
+    shop_id UUID NOT NULL,
     qty INT NOT NULL,
     created_at TIMESTAMP DEFAULT now(),
     updated_at TIMESTAMP,
