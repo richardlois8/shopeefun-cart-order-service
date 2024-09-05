@@ -3,7 +3,6 @@ package cart
 import (
 	model "cart-order-service/repository/models"
 	"database/sql"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -17,43 +16,6 @@ type store struct {
 // NewStore is a constructor function that returns a new store instance.
 func NewStore(db *sql.DB) *store {
 	return &store{db}
-}
-
-// DeleteProduct is a method that deletes a product from a user's cart.
-// It returns an error if any occurs during the deletion process.
-func (s *store) DeleteProduct(bReq model.DeleteCartRequest) error {
-	tx, err := s.db.Begin()
-	if err != nil {
-		return err
-	}
-
-	queryLock := `
-		SELECT 1
-		FROM cart_items	
-		WHERE user_id = $1
-		FOR UPDATE
-	`
-	if _, err := tx.Exec(queryLock, bReq.UserID); err != nil {
-		tx.Rollback()
-		return errors.New("failed to lock data")
-	}
-
-	queryUpdate := `
-		UPDATE cart_items
-		SET deleted_at = NOW()
-		WHERE user_id = $1 AND product_id = $2
-	`
-	if _, err := tx.Exec(queryUpdate, bReq.UserID, bReq.ProductID); err != nil {
-		tx.Rollback()
-		return errors.New("failed to delete data")
-	}
-
-	if err := tx.Commit(); err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return nil
 }
 
 // GetCartByUserID is a method that retrieves the cart for a given user.
