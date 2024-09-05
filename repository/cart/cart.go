@@ -3,6 +3,7 @@ package cart
 import (
 	model "cart-order-service/repository/models"
 	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 
