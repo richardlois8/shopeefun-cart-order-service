@@ -14,6 +14,20 @@ type store struct {
 	db *sql.DB
 }
 
+// DeleteProduct implements cart.cartStore.
+func (s *store) DeleteProduct(bReq model.DeleteCartRequest) error {
+	query := `
+		UPDATE cart_items
+		SET deleted_at = NOW()
+		WHERE user_id = $1 AND product_id = $2
+	`
+	if _, err := s.db.Exec(query, bReq.UserID, bReq.ProductID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // NewStore is a constructor function that returns a new store instance.
 func NewStore(db *sql.DB) *store {
 	return &store{db}
